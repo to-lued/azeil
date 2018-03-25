@@ -3,15 +3,16 @@
 
 #include <cstdint>
 #include <chrono>
+#include <memory>
 
 namespace stamp {
 
 typedef enum StampType { start, end } StampType;
 
-class StampEntry {
+class Entry {
        public:
-	StampEntry(StampType type);
-	StampEntry(std::chrono::system_clock::time_point timestamp, StampType type);
+	Entry(StampType type);
+	Entry(std::chrono::system_clock::time_point timestamp, StampType type);
 
 	std::chrono::system_clock::time_point timestamp();
 	void timestamp(std::chrono::system_clock::time_point timestamp);
@@ -23,6 +24,8 @@ class StampEntry {
 	std::chrono::system_clock::time_point timestamp_;
 	StampType type_;
 };
+
+typedef std::shared_ptr<Entry> EntryPtr;
 }
 
 #endif
