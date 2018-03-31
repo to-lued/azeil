@@ -1,20 +1,17 @@
 #include <chrono>
 #include <thread>
-#include "stamp_handler.h"
-#include "stamp_logfile.h"
+#include <iostream>
+#include "stampdb.h"
+#include <unistd.h>
 
 int main() {
-	auto start = stamp::start_now();
-	std::this_thread::sleep_for(std::chrono::seconds(5));
-	auto end = stamp::stop_now();
+	auto wrapper = StampDB::getInstance();
+	wrapper->open("testing.db", true);
+	if(!wrapper->isOpen())return -1;
 
-	stamp::LogWriter writer("/home/torben/test.txt");
-	if (!writer.open()) {
-		std::cout << "Failed to open log" << std::endl;
-		return -1;
-	}
-	
-	writer << start << end;
-	
+	wrapper->stamp(STAMP_START);
+	sleep(5);
+	wrapper->stamp(STAMP_STOP);
+
 	return 0;
 }
