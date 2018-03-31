@@ -94,5 +94,7 @@ std::vector<StampEntry> StampDB::readstamps(tp from, tp to) {
 		results.push_back(entry);
 	}
 
+	sqlite3_finalize(statement);
+
 	return results;
 }
