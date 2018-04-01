@@ -10,6 +10,8 @@ set(SOURCES
 	sqlite/sqlite3.h
 	stampdb.cpp
 	stampdb.h
+	wtCalculator.cpp
+	wtCalculator.h
 	)
 add_executable(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PRIVATE sqlite PRIVATE dbwrapper)
