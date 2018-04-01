@@ -27,6 +27,12 @@ bool StampDB::initialize() {
 	    "PRIMARY KEY)");
 }
 bool StampDB::stamp(STAMP_TYPE type) {
+	StampEntry entry;
+	entry.type = type;
+	entry.timestamp = std::chrono::system_clock::now();
+	return writeStampEntry(entry);
+}
+bool StampDB::writeStampEntry(StampEntry entry) {
 	sqlite3_stmt* statement;
 	int result = sqlite3_prepare_v2(
 	    database_,
@@ -34,15 +40,15 @@ bool StampDB::stamp(STAMP_TYPE type) {
 	    &statement, nullptr);
 	if (result != SQLITE_OK) return false;
 
-	result = sqlite3_bind_int(statement, 1, static_cast<int>(type));
+	result = sqlite3_bind_int(statement, 1, static_cast<int>(entry.type));
 	if (result != SQLITE_OK) {
 		sqlite3_finalize(statement);
 		return false;
 	}
 
-	auto now = std::chrono::system_clock::now();
-	auto seconds = std::chrono::time_point_cast<std::chrono::seconds>(now)
-			   .time_since_epoch();
+	auto seconds =
+	    std::chrono::time_point_cast<std::chrono::seconds>(entry.timestamp)
+		.time_since_epoch();
 	int seconds_int = seconds.count();
 
 	result = sqlite3_bind_int(statement, 2, seconds_int);
@@ -57,7 +63,7 @@ bool StampDB::stamp(STAMP_TYPE type) {
 	sqlite3_finalize(statement);
 	return retval;
 }
-std::vector<StampEntry> StampDB::readstamps(tp from, tp to) {
+std::vector<StampEntry> StampDB::readStampEntrys(tp from, tp to) {
 	std::vector<StampEntry> results;
 	int beg = std::chrono::time_point_cast<std::chrono::seconds>(from)
 		      .time_since_epoch()

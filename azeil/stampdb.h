@@ -20,7 +20,8 @@ class StampDB {
 	bool initialize();
 	bool isOpen() { return isopen_; }
 	bool stamp(STAMP_TYPE type = STAMP_UNDEFINED);
-	std::vector<StampEntry> readstamps(tp from, tp to);
+	bool writeStampEntry(StampEntry entry);
+	std::vector<StampEntry> readStampEntrys(tp from, tp to);
 
        private:
 	StampDB() { isopen_ = false; }
